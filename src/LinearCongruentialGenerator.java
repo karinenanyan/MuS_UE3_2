@@ -20,23 +20,21 @@ public class LinearCongruentialGenerator {
 
     public static int findRepeatingSequence(int[] array) {
 
-        for (int startPos = 0; startPos < array.length; startPos++) {
+        int sequenceLenght = 1;
 
-            for (int sequenceLength = 1; sequenceLength <= (array.length - startPos) / 2; sequenceLength++) {
+        for (int startPos = 1; startPos < array.length; startPos++)
+        {
+            if (array[0] != array[startPos])
+            {
+                sequenceLenght++;
+            }
 
-                boolean sequencesAreEqual = true;
-                for (int i = 0; i < sequenceLength; i++) {
-                    if (array[startPos + i] != array[startPos + sequenceLength + i]) {
-                        sequencesAreEqual = false;
-                        break;
-                    }
-                }
-                if (sequencesAreEqual) {
-                    return sequenceLength;
-                }
+            if (array[0] == array[startPos])
+            {
+                return sequenceLenght;
             }
         }
-        return -1;
+        return sequenceLenght;
     }
 
     public static void main(String[] args) throws IOException {
@@ -67,7 +65,7 @@ public class LinearCongruentialGenerator {
         }
 
         try {
-            PrintWriter printWriter = new PrintWriter(new File("/Users/kara/Desktop/Period_Lengths.csv"));
+            PrintWriter printWriter = new PrintWriter(new File("Period_Lengths.csv"));
 
             printWriter.write("Seed,Increment12,Increment13");
             printWriter.println();
