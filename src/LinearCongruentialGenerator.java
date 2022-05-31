@@ -42,16 +42,41 @@ public class LinearCongruentialGenerator {
 
     public static void main(String[] args) throws IOException {
 
+        Task3_1();
+        Task3_2();
+        Task3_3();
 
-        // Finding out the period length of the random number generator (with 100 numbers being generated)
-        // for seed values of 1 to 200, each with c = 12 and c = 13
+    }
 
-        int randomNumbers = 100;
+
+    public static void Task3_1() {
+
+        int rndNumberCount = 100;
+
+
+        double[] arrayIncrement12 = new double[rndNumberCount];
+        double[] arrayIncrement13 = new double[rndNumberCount];
+
+
+            LinearCongruentialGenerator lcg1 = new LinearCongruentialGenerator(64, 5, 12, 55);
+            for (int j = 0; j < rndNumberCount; j++) {
+                arrayIncrement12[j] = lcg1.randomNumber();
+            }
+
+            LinearCongruentialGenerator lcg2 = new LinearCongruentialGenerator(64, 5, 13, 55);
+            for (int k = 0; k < rndNumberCount; k++) {
+                arrayIncrement13[k] = lcg2.randomNumber();
+            }
+    }
+
+    public static void Task3_2() {
+
+        int rndNumberCount = 100;
         int maxSeedValue = 200;
 
 
-        double[] arrayIncrement12 = new double[randomNumbers];
-        double[] arrayIncrement13 = new double[randomNumbers];
+        double[] arrayIncrement12 = new double[rndNumberCount];
+        double[] arrayIncrement13 = new double[rndNumberCount];
         int[] periodLengthsIncrement12 = new int[maxSeedValue];
         int[] periodLengthsIncrement13 = new int[maxSeedValue];
 
@@ -59,13 +84,13 @@ public class LinearCongruentialGenerator {
         for(int i = 0; i < maxSeedValue; i++) {
 
             LinearCongruentialGenerator lcg1 = new LinearCongruentialGenerator(64, 5, 12, i+1);
-            for (int j = 0; j < randomNumbers; j++) {
+            for (int j = 0; j < rndNumberCount; j++) {
                 arrayIncrement12[j] = lcg1.randomNumber();
                 periodLengthsIncrement12[i] = findRepeatingSequence(arrayIncrement12);
             }
 
             LinearCongruentialGenerator lcg2 = new LinearCongruentialGenerator(64, 5, 13, i+1);
-            for (int k = 0; k < randomNumbers; k++) {
+            for (int k = 0; k < rndNumberCount; k++) {
                 arrayIncrement13[k] = lcg2.randomNumber();
                 periodLengthsIncrement13[i] = findRepeatingSequence(arrayIncrement13);
             }
@@ -97,13 +122,32 @@ public class LinearCongruentialGenerator {
 
         }
 
-        // Normalizing the generated random numbers to the range [0,1].
+    }
 
-        double max = Arrays.stream(arrayIncrement12).max().getAsDouble();
-        double min = Arrays.stream(arrayIncrement12).min().getAsDouble();
 
-        for(int i = 0; i < arrayIncrement12.length; i++) {
-            arrayIncrement12[i] = (arrayIncrement12[i] - min)/(max - min);
+    public static void Task3_3() {
+
+        int rndNumberCount = 2000;
+
+
+        double[] numbersArray1 = new double[rndNumberCount];
+        double[] numbersArray2 = new double[rndNumberCount];
+
+        LinearCongruentialGenerator lcg1 = new LinearCongruentialGenerator(86436, 1093, 0, 12);
+        for (int j = 0; j < rndNumberCount; j++) {
+            numbersArray1[j] = lcg1.randomNumber();
+        }
+
+        LinearCongruentialGenerator lcg2 = new LinearCongruentialGenerator(86436, 1093, 18257, 12);
+        for (int j = 0; j < rndNumberCount; j++) {
+            numbersArray2[j] = lcg2.randomNumber();
+        }
+
+        double max = Arrays.stream(numbersArray1).max().getAsDouble();
+        double min = Arrays.stream(numbersArray2).min().getAsDouble();
+
+        for(int i = 0; i < numbersArray1.length; i++) {
+            numbersArray1[i] = (numbersArray1[i] - min)/(max - min);
         }
 
         // Exporting the normalized random numbers for the purposes of the analysis
@@ -114,8 +158,8 @@ public class LinearCongruentialGenerator {
             printWriter.write("Number");
             printWriter.println();
 
-            for(int i = 0; i < arrayIncrement12.length; i++) {
-                printWriter.write(Double.toString(arrayIncrement12[i]));
+            for(int i = 0; i < numbersArray1.length; i++) {
+                printWriter.write(Double.toString(numbersArray1[i]));
                 printWriter.println();
 
             }
@@ -126,6 +170,5 @@ public class LinearCongruentialGenerator {
         } catch (IOException ioException) {
 
         }
-
     }
 }
