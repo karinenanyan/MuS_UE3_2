@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 public class LinearCongruentialGenerator {
 
@@ -13,38 +14,44 @@ public class LinearCongruentialGenerator {
         this.i = seed;
     }
 
-    public int randomNumber() {
+    public double randomNumber() {
         i = (a * i + c) % m;
         return i;
     }
 
-    public static int findRepeatingSequence(int[] array) {
+    // Method to find the period lengths of the generated random numbers
 
-        int sequenceLenght = 1;
+    public static int findRepeatingSequence(double[] array) {
+
+        int sequenceLength = 1;
 
         for (int startPos = 1; startPos < array.length; startPos++)
         {
             if (array[0] != array[startPos])
             {
-                sequenceLenght++;
+                sequenceLength++;
             }
 
             if (array[0] == array[startPos])
             {
-                return sequenceLenght;
+                return sequenceLength;
             }
         }
-        return sequenceLenght;
+        return sequenceLength;
     }
 
     public static void main(String[] args) throws IOException {
 
-        int randomNumbers = 200;
+
+        // Finding out the period length of the random number generator (with 100 numbers being generated)
+        // for seed values of 1 to 200, each with c = 12 and c = 13
+
+        int randomNumbers = 100;
         int maxSeedValue = 200;
 
 
-        int[] arrayIncrement12 = new int[randomNumbers];
-        int[] arrayIncrement13 = new int[randomNumbers];
+        double[] arrayIncrement12 = new double[randomNumbers];
+        double[] arrayIncrement13 = new double[randomNumbers];
         int[] periodLengthsIncrement12 = new int[maxSeedValue];
         int[] periodLengthsIncrement13 = new int[maxSeedValue];
 
@@ -64,6 +71,9 @@ public class LinearCongruentialGenerator {
             }
         }
 
+        // Exporting the period lengths for the generated random numbers
+        // for seed values of 1 to 200, each with c = 12 and c = 13 for the purposes of analysis
+
         try {
             PrintWriter printWriter = new PrintWriter(new File("Period_Lengths.csv"));
 
@@ -76,6 +86,36 @@ public class LinearCongruentialGenerator {
                 printWriter.write(Integer.toString(periodLengthsIncrement12[i]));
                 printWriter.write(",");
                 printWriter.write(Integer.toString(periodLengthsIncrement13[i]));
+                printWriter.println();
+
+            }
+
+            printWriter.flush();
+            printWriter.close();
+
+        } catch (IOException ioException) {
+
+        }
+
+        // Normalizing the generated random numbers to the range [0,1].
+
+        double max = Arrays.stream(arrayIncrement12).max().getAsDouble();
+        double min = Arrays.stream(arrayIncrement12).min().getAsDouble();
+
+        for(int i = 0; i < arrayIncrement12.length; i++) {
+            arrayIncrement12[i] = (arrayIncrement12[i] - min)/(max - min);
+        }
+
+        // Exporting the normalized random numbers for the purposes of the analysis
+
+        try {
+            PrintWriter printWriter = new PrintWriter(new File("Normalized_Random_numbers.csv"));
+
+            printWriter.write("Number");
+            printWriter.println();
+
+            for(int i = 0; i < arrayIncrement12.length; i++) {
+                printWriter.write(Double.toString(arrayIncrement12[i]));
                 printWriter.println();
 
             }
